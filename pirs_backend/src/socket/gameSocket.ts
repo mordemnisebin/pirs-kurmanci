@@ -56,9 +56,9 @@ export function setupSocketIO(httpServer: HttpServer) {
     console.log(`🔌 Lîstikvan hate girêdan: ${socket.id}`);
 
     // Yeni oda oluştur
-    socket.on("createRoom", async (data: { 
-      userId: string; 
-      name: string; 
+    socket.on("createRoom", async (data: {
+      userId: string;
+      name: string;
       categoryId?: string;
       difficulty?: string;
       maxPlayers?: number;
@@ -72,9 +72,9 @@ export function setupSocketIO(httpServer: HttpServer) {
         if (data.categoryId) {
           where.categoryId = data.categoryId;
         }
-        
+
         const allQuestions = await prisma.question.findMany({ where });
-        
+
         // Rastgele karıştır ve 10 soru seç
         const shuffled = allQuestions.sort(() => Math.random() - 0.5);
         const questions = shuffled.slice(0, 10);
@@ -237,9 +237,9 @@ export function setupSocketIO(httpServer: HttpServer) {
     });
 
     // Cevap ver
-    socket.on("submitAnswer", (data: { 
-      roomCode: string; 
-      userId: string; 
+    socket.on("submitAnswer", (data: {
+      roomCode: string;
+      userId: string;
       answer: string;
       timeSpent: number;
     }) => {
@@ -248,7 +248,7 @@ export function setupSocketIO(httpServer: HttpServer) {
 
       const question = room.questions[room.currentQuestion];
       const isCorrect = data.answer === question.correctOption;
-      
+
       const player = room.lîstikvan.find(p => p.id === data.userId);
       if (player && isCorrect) {
         // Zaman bonusu: hızlı cevap daha çok puan
@@ -280,9 +280,9 @@ export function setupSocketIO(httpServer: HttpServer) {
       if (room.currentQuestion >= room.questions.length) {
         // Oyun bitti
         room.rewş = "finished";
-        
+
         const sortedPlayers = [...room.lîstikvan].sort((a, b) => b.score - a.score);
-        
+
         io.to(data.roomCode).emit("gameEnded", {
           winner: sortedPlayers[0],
           rankings: sortedPlayers.map((p, i) => ({
@@ -353,7 +353,7 @@ export function setupSocketIO(httpServer: HttpServer) {
     // Bağlantı koptuğunda
     socket.on("disconnect", () => {
       console.log(`🔌 Lîstikvan qut bû: ${socket.id}`);
-      
+
       // Oyuncuyu tüm odalardan çıkar
       rooms.forEach((room, roomCode) => {
         const playerIndex = room.lîstikvan.findIndex(p => p.socketId === socket.id);

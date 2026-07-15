@@ -38,5 +38,3 @@ class CategoryModel {
     return int.parse(hex, radix: 16);
   }
 }
-
-

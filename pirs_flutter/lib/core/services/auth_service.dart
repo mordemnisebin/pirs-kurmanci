@@ -111,4 +111,3 @@ class AuthResult {
   final UserProfile? user;
   final String? message;
 }
-

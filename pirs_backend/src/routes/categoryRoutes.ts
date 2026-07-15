@@ -5,7 +5,7 @@ import prisma from "../lib/prisma";
 const router = Router();
 
 router.get("/", async (_req: Request, res: Response) => {
-  const categories = await prisma.category.findMany({ 
+  const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
     include: {
       _count: {

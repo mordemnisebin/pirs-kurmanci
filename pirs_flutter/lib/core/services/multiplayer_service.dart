@@ -6,10 +6,10 @@ import 'api_config.dart';
 class MultiplayerService {
   static io.Socket? _socket;
   static final _eventController = StreamController<Map<String, dynamic>>.broadcast();
-  
+
   /// Event akışı
   static Stream<Map<String, dynamic>> get events => _eventController.stream;
-  
+
   /// Socket bağlantısı
   static bool get isConnected => _socket?.connected ?? false;
 

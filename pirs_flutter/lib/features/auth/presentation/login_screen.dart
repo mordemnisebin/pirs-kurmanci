@@ -59,7 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (result.isSuccess && result.user != null) {
         final notifier = ref.read(currentUserProvider.notifier);
         notifier.state = result.user!;
-        
+
         if (mounted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -116,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (result.isSuccess && result.user != null) {
         final notifier = ref.read(currentUserProvider.notifier);
         notifier.state = result.user!;
-        
+
         if (mounted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomeScreen()),

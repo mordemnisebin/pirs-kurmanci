@@ -19,11 +19,11 @@ router.get("/", async (req: Request, res: Response) => {
   const take = Math.min(parseInt(limit as string, 10) || 10, 20);
 
   const where: any = {};
-  
+
   if (categoryId) {
     where.categoryId = categoryId as string;
   }
-  
+
   if (difficulty) {
     where.difficulty = difficulty as string;
   }

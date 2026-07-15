@@ -13,7 +13,7 @@ const app = express();
 
 // CORS ayarları - production ve development için
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? [
         'https://pirs-kurmanci.vercel.app',
         'https://pirs-flutter.vercel.app',

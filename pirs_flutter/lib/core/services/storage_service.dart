@@ -48,4 +48,3 @@ class StorageService {
     await prefs.remove(_userKey);
   }
 }
-
