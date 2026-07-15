@@ -208,7 +208,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1,
                             blurRadius: 20,
                           ),
                         ],
@@ -289,7 +289,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -313,7 +313,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -333,7 +333,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                       child: LinearProgressIndicator(
                         value: progress,
                         minHeight: 8,
-                        backgroundColor: Colors.white.withOpacity(0.3),
+                        backgroundColor: Colors.white.withValues(alpha: 0.3,
                         valueColor: const AlwaysStoppedAnimation(Colors.white),
                       ),
                     ),
@@ -352,7 +352,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1,
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -397,7 +397,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                           Expanded(
                             child: ListView.separated(
                               itemCount: question.options.length,
-                              separatorBuilder: (_, __) => const SizedBox(height: 12),
+                              separatorBuilder: (_, _) => const SizedBox(height: 12),
                               itemBuilder: (context, index) {
                                 return _buildOptionCard(
                                   context,
@@ -464,24 +464,24 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
     
     if (showResult) {
       if (isCorrect) {
-        backgroundColor = Colors.green.withOpacity(0.1);
+        backgroundColor = Colors.green.withValues(alpha: 0.1;
         borderColor = Colors.green;
         textColor = Colors.green.shade700;
         trailingIcon = Icons.check_circle;
       } else if (isSelected) {
-        backgroundColor = Colors.red.withOpacity(0.1);
+        backgroundColor = Colors.red.withValues(alpha: 0.1;
         borderColor = Colors.red;
         textColor = Colors.red.shade700;
         trailingIcon = Icons.cancel;
       } else {
         backgroundColor = colorScheme.surface;
-        borderColor = colorScheme.outline.withOpacity(0.3);
-        textColor = colorScheme.onSurface.withOpacity(0.5);
+        borderColor = colorScheme.outline.withValues(alpha: 0.3;
+        textColor = colorScheme.onSurface.withValues(alpha: 0.5;
         trailingIcon = null;
       }
     } else {
       backgroundColor = colorScheme.surface;
-      borderColor = colorScheme.outline.withOpacity(0.3);
+      borderColor = colorScheme.outline.withValues(alpha: 0.3;
       textColor = colorScheme.onSurface;
       trailingIcon = null;
     }
@@ -584,7 +584,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              color.withOpacity(0.3),
+              color.withValues(alpha: 0.3,
               colorScheme.surface,
             ],
           ),
@@ -624,7 +624,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1,
                         blurRadius: 20,
                       ),
                     ],
@@ -644,7 +644,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                           Container(
                             width: 1,
                             height: 60,
-                            color: colorScheme.outline.withOpacity(0.2),
+                            color: colorScheme.outline.withValues(alpha: 0.2,
                           ),
                           _buildStatItem(
                             context,
@@ -656,7 +656,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> with TickerProviderStat
                           Container(
                             width: 1,
                             height: 60,
-                            color: colorScheme.outline.withOpacity(0.2),
+                            color: colorScheme.outline.withValues(alpha: 0.2,
                           ),
                           _buildStatItem(
                             context,

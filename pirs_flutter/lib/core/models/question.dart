@@ -59,14 +59,14 @@ class Question {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'categoryId': categoryId,
-        'difficulty': difficulty,
-        'text': text,
-        'optionA': optionA,
-        'optionB': optionB,
-        'optionC': optionC,
-        'optionD': optionD,
-        'correctOption': correctOption,
-      };
+    'id': id,
+    'categoryId': categoryId,
+    'difficulty': difficulty,
+    'text': text,
+    'optionA': optionA,
+    'optionB': optionB,
+    'optionC': optionC,
+    'optionD': optionD,
+    'correctOption': correctOption,
+  };
 }

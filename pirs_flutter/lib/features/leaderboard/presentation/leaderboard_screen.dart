@@ -30,7 +30,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     });
 
     try {
-      final leaders = await LeaderboardService.getLeaderboard(period: _selectedPeriod);
+      final leaders = await LeaderboardService.getLeaderboard(
+        period: _selectedPeriod,
+      );
       setState(() {
         _leaders = leaders;
         _isLoading = false;
@@ -60,22 +62,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'allTime',
-                child: Text('Hemû dem'),
-              ),
-              const PopupMenuItem(
-                value: 'daily',
-                child: Text('Rojane'),
-              ),
-              const PopupMenuItem(
-                value: 'weekly',
-                child: Text('Hefteyî'),
-              ),
-              const PopupMenuItem(
-                value: 'monthly',
-                child: Text('Mehane'),
-              ),
+              const PopupMenuItem(value: 'allTime', child: Text('Hemû dem')),
+              const PopupMenuItem(value: 'daily', child: Text('Rojane')),
+              const PopupMenuItem(value: 'weekly', child: Text('Hefteyî')),
+              const PopupMenuItem(value: 'monthly', child: Text('Mehane')),
             ],
           ),
         ],
@@ -83,82 +73,94 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-                        const SizedBox(height: 16),
-                        Text(
-                          _errorMessage!,
-                          style: Theme.of(context).textTheme.titleMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: _loadLeaderboard,
-                          child: const Text('Dîsa biceribîne'),
-                        ),
-                      ],
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red.shade300,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _errorMessage!,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _loadLeaderboard,
+                      child: const Text('Dîsa biceribîne'),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : _leaders.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.leaderboard_outlined,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Hîn kes lîst nekir',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                )
-              : _leaders.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.leaderboard_outlined, size: 64, color: Colors.grey.shade400),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Hîn kes lîst nekir',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey.shade600,
-                                ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _loadLeaderboard,
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemBuilder: (context, index) {
-                          final leader = _leaders[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: index < 3
-                                  ? Colors.amber.shade100
-                                  : Colors.grey.shade200,
-                              child: Text(
-                                '#${index + 1}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: index < 3 ? Colors.amber.shade900 : Colors.grey.shade700,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              leader.nickname,
-                              style: TextStyle(
-                                fontWeight: index < 3 ? FontWeight.bold : FontWeight.normal,
-                              ),
-                            ),
-                            trailing: Text(
-                              '${leader.score} xal',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green.shade700,
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemCount: _leaders.length,
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _loadLeaderboard,
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemBuilder: (context, index) {
+                  final leader = _leaders[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: index < 3
+                          ? Colors.amber.shade100
+                          : Colors.grey.shade200,
+                      child: Text(
+                        '#${index + 1}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: index < 3
+                              ? Colors.amber.shade900
+                              : Colors.grey.shade700,
+                        ),
                       ),
                     ),
+                    title: Text(
+                      leader.nickname,
+                      style: TextStyle(
+                        fontWeight: index < 3
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    trailing: Text(
+                      '${leader.score} xal',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, _) => const Divider(),
+                itemCount: _leaders.length,
+              ),
+            ),
     );
   }
 }

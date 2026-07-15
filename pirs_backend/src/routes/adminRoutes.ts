@@ -1,7 +1,10 @@
 import { NextFunction, Router, Response } from "express";
 
 import prisma from "../lib/prisma";
-import { authenticate, AuthenticatedRequest } from "../middleware/authMiddleware";
+import {
+  authenticate,
+  AuthenticatedRequest,
+} from "../middleware/authMiddleware";
 
 const router = Router();
 
@@ -125,5 +128,3 @@ router.delete(
 );
 
 export default router;
-
-

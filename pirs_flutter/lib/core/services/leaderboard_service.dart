@@ -24,7 +24,9 @@ class LeaderboardService {
       }
 
       return entriesList
-          .map((json) => LeaderboardEntry.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) => LeaderboardEntry.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       throw Exception('Tabloya giştî nehat girtin: ${e.toString()}');
@@ -55,4 +57,3 @@ class LeaderboardEntry {
     );
   }
 }
-

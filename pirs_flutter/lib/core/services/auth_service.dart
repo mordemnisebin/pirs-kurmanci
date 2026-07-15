@@ -13,14 +13,16 @@ class AuthService {
     required String nickname,
   }) async {
     try {
-      final response = await ApiClient.post(
-        '${ApiConfig.authEndpoint}/register',
-        body: {
-          'email': email,
-          'password': password,
-          'nickname': nickname,
-        },
-      ) as Map<String, dynamic>;
+      final response =
+          await ApiClient.post(
+                '${ApiConfig.authEndpoint}/register',
+                body: {
+                  'email': email,
+                  'password': password,
+                  'nickname': nickname,
+                },
+              )
+              as Map<String, dynamic>;
 
       final token = response['token'] as String;
       final userData = response['user'] as Map<String, dynamic>;
@@ -45,13 +47,12 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final response = await ApiClient.post(
-        '${ApiConfig.authEndpoint}/login',
-        body: {
-          'email': email,
-          'password': password,
-        },
-      ) as Map<String, dynamic>;
+      final response =
+          await ApiClient.post(
+                '${ApiConfig.authEndpoint}/login',
+                body: {'email': email, 'password': password},
+              )
+              as Map<String, dynamic>;
 
       final token = response['token'] as String;
       final userData = response['user'] as Map<String, dynamic>;
@@ -73,7 +74,9 @@ class AuthService {
   /// Bikarhênerê niha bixwîne.
   static Future<UserProfile?> getCurrentUser() async {
     try {
-      final response = await ApiClient.get('${ApiConfig.authEndpoint}/me') as Map<String, dynamic>;
+      final response =
+          await ApiClient.get('${ApiConfig.authEndpoint}/me')
+              as Map<String, dynamic>;
       return UserProfile.fromJson(response);
     } catch (e) {
       return null;
@@ -98,17 +101,16 @@ class AuthService {
 /// Encama têketinê.
 class AuthResult {
   AuthResult.success({required this.token, required this.user})
-      : isSuccess = true,
-        message = null;
+    : isSuccess = true,
+      message = null;
 
   AuthResult.failure({required this.message})
-      : isSuccess = false,
-        token = null,
-        user = null;
+    : isSuccess = false,
+      token = null,
+      user = null;
 
   final bool isSuccess;
   final String? token;
   final UserProfile? user;
   final String? message;
 }
-

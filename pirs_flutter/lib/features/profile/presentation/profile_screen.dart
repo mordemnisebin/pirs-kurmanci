@@ -46,9 +46,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final user = ref.watch(currentUserProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profîl'),
-      ),
+      appBar: AppBar(title: const Text('Profîl')),
       body: RefreshIndicator(
         onRefresh: _loadStats,
         child: ListView(
@@ -59,7 +57,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 CircleAvatar(
                   radius: 28,
                   child: Text(
-                    user.nickname.isNotEmpty ? user.nickname[0].toUpperCase() : '?',
+                    user.nickname.isNotEmpty
+                        ? user.nickname[0].toUpperCase()
+                        : '?',
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -87,10 +87,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             else if (_error != null)
               Column(
                 children: [
-                  Text(
-                    _error!,
-                    style: TextStyle(color: Colors.red.shade400),
-                  ),
+                  Text(_error!, style: TextStyle(color: Colors.red.shade400)),
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: _loadStats,
@@ -99,7 +96,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ],
               )
             else if (_stats == null || _stats!.totalSessions == 0)
-              const Text('Hîn ti lîstik nehat lîstin. Dest bi yek lîstikê bike!')
+              const Text(
+                'Hîn ti lîstik nehat lîstin. Dest bi yek lîstikê bike!',
+              )
             else
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +130,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           const Divider(),
                           _ProfileStatRow(
                             label: 'Rêjeya rast',
-                            value: '${(_stats!.correctRate * 100).toStringAsFixed(0)}%',
+                            value:
+                                '${(_stats!.correctRate * 100).toStringAsFixed(0)}%',
                           ),
                         ],
                       ),
@@ -147,10 +147,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 }
 
 class _ProfileStatRow extends StatelessWidget {
-  const _ProfileStatRow({
-    required this.label,
-    required this.value,
-  });
+  const _ProfileStatRow({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -161,13 +158,8 @@ class _ProfileStatRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
       ],
     );
   }
 }
-
-

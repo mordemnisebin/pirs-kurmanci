@@ -10,14 +10,16 @@ class GameService {
     required int correctAnswers,
   }) async {
     try {
-      final response = await ApiClient.post(
-        '${ApiConfig.gamesEndpoint}/finish',
-        body: {
-          'score': score,
-          'totalQuestions': totalQuestions,
-          'correctAnswers': correctAnswers,
-        },
-      ) as Map<String, dynamic>;
+      final response =
+          await ApiClient.post(
+                '${ApiConfig.gamesEndpoint}/finish',
+                body: {
+                  'score': score,
+                  'totalQuestions': totalQuestions,
+                  'correctAnswers': correctAnswers,
+                },
+              )
+              as Map<String, dynamic>;
 
       return response;
     } catch (e) {
@@ -28,9 +30,9 @@ class GameService {
   /// Statisîkên bikarhênerê bistîne.
   static Future<GameStats> getStats() async {
     try {
-      final response = await ApiClient.get(
-        '${ApiConfig.gamesEndpoint}/stats',
-      ) as Map<String, dynamic>;
+      final response =
+          await ApiClient.get('${ApiConfig.gamesEndpoint}/stats')
+              as Map<String, dynamic>;
       return GameStats.fromJson(response);
     } catch (e) {
       throw Exception('Statisîk nehatin girtin: ${e.toString()}');
@@ -60,4 +62,3 @@ class GameStats {
     );
   }
 }
-

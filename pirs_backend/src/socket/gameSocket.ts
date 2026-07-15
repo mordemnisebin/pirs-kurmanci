@@ -13,9 +13,11 @@ interface Player {
     avatar?: string;
     score: number;
     isReady: boolean;
+    team?: string;
   }>;
   xwedî: string;
   maxPlayers: number;
+  gameMode?: string;
   rewş: "waiting" | "playing" | "finished";
   difficulty?: string;
   categoryId?: string;
@@ -39,14 +41,15 @@ function generateRoomCode(): string {
 export function setupSocketIO(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.NODE_ENV === 'production'
-        ? [
-            'https://pirs-kurmanci.vercel.app',
-            'https://pirs-flutter.vercel.app',
-            /\.vercel\.app$/,
-            /\.netlify\.app$/,
-          ]
-        : '*',
+      origin:
+        process.env.NODE_ENV === "production"
+          ? [
+              "https://pirs-kurmanci.vercel.app",
+              "https://pirs-flutter.vercel.app",
+              /\.vercel\.app$/,
+              /\.netlify\.app$/,
+            ]
+          : "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
@@ -56,133 +59,159 @@ export function setupSocketIO(httpServer: HttpServer) {
     console.log(`🔌 Lîstikvan hate girêdan: ${socket.id}`);
 
     // Yeni oda oluştur
-    socket.on("createRoom", async (data: { 
-      userId: string; 
-      name: string; 
-      categoryId?: string;
-      difficulty?: string;
-      maxPlayers?: number;
-    }) => {
-      try {
-        const roomCode = generateRoomCode();
-        const roomId = `room_${roomCode}_${Date.now()}`;
+    socket.on(
+      "createRoom",
+      async (data: {
+        userId: string;
+        name: string;
+        categoryId?: string;
+        difficulty?: string;
+        maxPlayers?: number;
+        gameMode?: string; // 1vs1, team, ffa
+      }) => {
+        try {
+          const roomCode = generateRoomCode();
+          const roomId = `room_${roomCode}_${Date.now()}`;
+          const gameMode = data.gameMode || "ffa";
 
-        // Soruları çek
-        const where: any = {};
-        if (data.categoryId) {
-          where.categoryId = data.categoryId;
+          // Soruları çek
+          const where: any = {};
+          if (data.categoryId) {
+            where.categoryId = data.categoryId;
+          }
+
+          const allQuestions = await prisma.question.findMany({ where });
+
+          // Rastgele karıştır ve 10 soru seç
+          const shuffled = allQuestions.sort(() => Math.random() - 0.5);
+          const questions = shuffled.slice(0, 10);
+
+          let teamAssignment: string | undefined;
+          if (gameMode === "team") {
+            teamAssignment = "A"; // Oda kurucusu Takım A
+          }
+
+          const room: Player = {
+            odaId: roomId,
+            odaKod: roomCode,
+            lîstikvan: [
+              {
+                id: data.userId,
+                socketId: socket.id,
+                name: data.name,
+                score: 0,
+                isReady: true,
+                team: teamAssignment,
+              },
+            ],
+            xwedî: data.userId,
+            maxPlayers: gameMode === "1vs1" ? 2 : data.maxPlayers || 4,
+            gameMode: gameMode,
+            rewş: "waiting",
+            categoryId: data.categoryId,
+            difficulty: data.difficulty,
+            currentQuestion: 0,
+            questions: questions,
+          };
+
+          rooms.set(roomCode, room);
+          socket.join(roomCode);
+
+          console.log(`🏠 Oda hat afirandin: ${roomCode} ji ${data.name}`);
+
+          socket.emit("roomCreated", {
+            success: true,
+            roomCode,
+            room: {
+              ...room,
+              questions: undefined, // Soruları istemciye gönderme
+            },
+          });
+        } catch (error) {
+          console.error("❌ Oda afirandin çewtî:", error);
+          socket.emit("error", { message: "Oda nehate afirandin" });
         }
-        
-        const allQuestions = await prisma.question.findMany({ where });
-        
-        // Rastgele karıştır ve 10 soru seç
-        const shuffled = allQuestions.sort(() => Math.random() - 0.5);
-        const questions = shuffled.slice(0, 10);
-
-        const room: Player = {
-          odaId: roomId,
-          odaKod: roomCode,
-          lîstikvan: [{
-            id: data.userId,
-            socketId: socket.id,
-            name: data.name,
-            score: 0,
-            isReady: true,
-          }],
-          xwedî: data.userId,
-          maxPlayers: data.maxPlayers || 4,
-          rewş: "waiting",
-          categoryId: data.categoryId,
-          difficulty: data.difficulty,
-          currentQuestion: 0,
-          questions: questions,
-        };
-
-        rooms.set(roomCode, room);
-        socket.join(roomCode);
-
-        console.log(`🏠 Oda hat afirandin: ${roomCode} ji ${data.name}`);
-
-        socket.emit("roomCreated", {
-          success: true,
-          roomCode,
-          room: {
-            ...room,
-            questions: undefined, // Soruları istemciye gönderme
-          },
-        });
-      } catch (error) {
-        console.error("❌ Oda afirandin çewtî:", error);
-        socket.emit("error", { message: "Oda nehate afirandin" });
-      }
-    });
+      },
+    );
 
     // Odaya katıl
-    socket.on("joinRoom", (data: { roomCode: string; userId: string; name: string }) => {
-      const room = rooms.get(data.roomCode.toUpperCase());
+    socket.on(
+      "joinRoom",
+      (data: { roomCode: string; userId: string; name: string }) => {
+        const room = rooms.get(data.roomCode.toUpperCase());
 
-      if (!room) {
-        socket.emit("error", { message: "Oda nehate dîtin" });
-        return;
-      }
+        if (!room) {
+          socket.emit("error", { message: "Oda nehate dîtin" });
+          return;
+        }
 
-      if (room.rewş !== "waiting") {
-        socket.emit("error", { message: "Lîstik dest pê kiriye" });
-        return;
-      }
+        if (room.rewş !== "waiting") {
+          socket.emit("error", { message: "Lîstik dest pê kiriye" });
+          return;
+        }
 
-      if (room.lîstikvan.length >= room.maxPlayers) {
-        socket.emit("error", { message: "Oda tijî ye" });
-        return;
-      }
+        if (room.lîstikvan.length >= room.maxPlayers) {
+          socket.emit("error", { message: "Oda tijî ye" });
+          return;
+        }
 
-      // Oyuncuyu ekle
-      room.lîstikvan.push({
-        id: data.userId,
-        socketId: socket.id,
-        name: data.name,
-        score: 0,
-        isReady: false,
-      });
+        // Takım belirleme
+        let assignedTeam: string | undefined;
+        if (room.gameMode === "team") {
+          const teamA = room.lîstikvan.filter((p) => p.team === "A").length;
+          const teamB = room.lîstikvan.filter((p) => p.team === "B").length;
+          assignedTeam = teamA <= teamB ? "A" : "B";
+        }
 
-      socket.join(data.roomCode.toUpperCase());
-      console.log(`👤 ${data.name} odayê ${data.roomCode} hat`);
+        // Oyuncuyu ekle
+        room.lîstikvan.push({
+          id: data.userId,
+          socketId: socket.id,
+          name: data.name,
+          score: 0,
+          isReady: false,
+          team: assignedTeam,
+        });
 
-      // Tüm odadakilere bildir
-      io.to(data.roomCode.toUpperCase()).emit("playerJoined", {
-        players: room.lîstikvan.map(p => ({
-          id: p.id,
-          name: p.name,
-          isReady: p.isReady,
-          score: p.score,
-        })),
-        newPlayer: data.name,
-      });
+        socket.join(data.roomCode.toUpperCase());
+        console.log(`👤 ${data.name} odayê ${data.roomCode} hat`);
 
-      socket.emit("roomJoined", {
-        success: true,
-        roomCode: data.roomCode.toUpperCase(),
-        players: room.lîstikvan.map(p => ({
-          id: p.id,
-          name: p.name,
-          isReady: p.isReady,
-          score: p.score,
-        })),
-        isOwner: false,
-      });
-    });
+        // Tüm odadakilere bildir
+        io.to(data.roomCode.toUpperCase()).emit("playerJoined", {
+          players: room.lîstikvan.map((p) => ({
+            id: p.id,
+            name: p.name,
+            isReady: p.isReady,
+            score: p.score,
+          })),
+          newPlayer: data.name,
+        });
+
+        socket.emit("roomJoined", {
+          success: true,
+          roomCode: data.roomCode.toUpperCase(),
+          players: room.lîstikvan.map((p) => ({
+            id: p.id,
+            name: p.name,
+            isReady: p.isReady,
+            score: p.score,
+          })),
+          isOwner: false,
+        });
+      },
+    );
 
     // Hazır ol
     socket.on("setReady", (data: { roomCode: string; userId: string }) => {
       const room = rooms.get(data.roomCode);
       if (!room) return;
 
-      const player = room.lîstikvan.find(p => p.id === data.userId);
+      const player = room.lîstikvan.find((p) => p.id === data.userId);
       if (player) {
         player.isReady = true;
         io.to(data.roomCode).emit("playerReady", {
           playerId: data.userId,
-          players: room.lîstikvan.map(p => ({
+          players: room.lîstikvan.map((p) => ({
             id: p.id,
             name: p.name,
             isReady: p.isReady,
@@ -198,7 +227,9 @@ export function setupSocketIO(httpServer: HttpServer) {
       if (!room) return;
 
       if (room.xwedî !== data.userId) {
-        socket.emit("error", { message: "Tenê xwediyê odayê dikare dest pê bike" });
+        socket.emit("error", {
+          message: "Tenê xwediyê odayê dikare dest pê bike",
+        });
         return;
       }
 
@@ -207,7 +238,7 @@ export function setupSocketIO(httpServer: HttpServer) {
         return;
       }
 
-      const allReady = room.lîstikvan.every(p => p.isReady);
+      const allReady = room.lîstikvan.every((p) => p.isReady);
       if (!allReady) {
         socket.emit("error", { message: "Hemû lîstikvan amade ne" });
         return;
@@ -237,38 +268,41 @@ export function setupSocketIO(httpServer: HttpServer) {
     });
 
     // Cevap ver
-    socket.on("submitAnswer", (data: { 
-      roomCode: string; 
-      userId: string; 
-      answer: string;
-      timeSpent: number;
-    }) => {
-      const room = rooms.get(data.roomCode);
-      if (!room || room.rewş !== "playing") return;
+    socket.on(
+      "submitAnswer",
+      (data: {
+        roomCode: string;
+        userId: string;
+        answer: string;
+        timeSpent: number;
+      }) => {
+        const room = rooms.get(data.roomCode);
+        if (!room || room.rewş !== "playing") return;
 
-      const question = room.questions[room.currentQuestion];
-      const isCorrect = data.answer === question.correctOption;
-      
-      const player = room.lîstikvan.find(p => p.id === data.userId);
-      if (player && isCorrect) {
-        // Zaman bonusu: hızlı cevap daha çok puan
-        const timeBonus = Math.max(0, 15 - data.timeSpent) * 10;
-        player.score += 100 + timeBonus;
-      }
+        const question = room.questions[room.currentQuestion];
+        const isCorrect = data.answer === question.correctOption;
 
-      // Tüm oyunculara güncelleme gönder
-      io.to(data.roomCode).emit("answerResult", {
-        playerId: data.userId,
-        isCorrect,
-        correctAnswer: question.correctOption,
-        explanation: question.explanation,
-        scores: room.lîstikvan.map(p => ({
-          id: p.id,
-          name: p.name,
-          score: p.score,
-        })),
-      });
-    });
+        const player = room.lîstikvan.find((p) => p.id === data.userId);
+        if (player && isCorrect) {
+          // Zaman bonusu: hızlı cevap daha çok puan
+          const timeBonus = Math.max(0, 15 - data.timeSpent) * 10;
+          player.score += 100 + timeBonus;
+        }
+
+        // Tüm oyunculara güncelleme gönder
+        io.to(data.roomCode).emit("answerResult", {
+          playerId: data.userId,
+          isCorrect,
+          correctAnswer: question.correctOption,
+          explanation: question.explanation,
+          scores: room.lîstikvan.map((p) => ({
+            id: p.id,
+            name: p.name,
+            score: p.score,
+          })),
+        });
+      },
+    );
 
     // Sonraki soru
     socket.on("nextQuestion", (data: { roomCode: string }) => {
@@ -280,9 +314,11 @@ export function setupSocketIO(httpServer: HttpServer) {
       if (room.currentQuestion >= room.questions.length) {
         // Oyun bitti
         room.rewş = "finished";
-        
-        const sortedPlayers = [...room.lîstikvan].sort((a, b) => b.score - a.score);
-        
+
+        const sortedPlayers = [...room.lîstikvan].sort(
+          (a, b) => b.score - a.score,
+        );
+
         io.to(data.roomCode).emit("gameEnded", {
           winner: sortedPlayers[0],
           rankings: sortedPlayers.map((p, i) => ({
@@ -325,7 +361,7 @@ export function setupSocketIO(httpServer: HttpServer) {
       const room = rooms.get(data.roomCode);
       if (!room) return;
 
-      room.lîstikvan = room.lîstikvan.filter(p => p.id !== data.userId);
+      room.lîstikvan = room.lîstikvan.filter((p) => p.id !== data.userId);
       socket.leave(data.roomCode);
 
       if (room.lîstikvan.length === 0) {
@@ -339,7 +375,7 @@ export function setupSocketIO(httpServer: HttpServer) {
 
         io.to(data.roomCode).emit("playerLeft", {
           playerId: data.userId,
-          players: room.lîstikvan.map(p => ({
+          players: room.lîstikvan.map((p) => ({
             id: p.id,
             name: p.name,
             isReady: p.isReady,
@@ -353,10 +389,12 @@ export function setupSocketIO(httpServer: HttpServer) {
     // Bağlantı koptuğunda
     socket.on("disconnect", () => {
       console.log(`🔌 Lîstikvan qut bû: ${socket.id}`);
-      
+
       // Oyuncuyu tüm odalardan çıkar
       rooms.forEach((room, roomCode) => {
-        const playerIndex = room.lîstikvan.findIndex(p => p.socketId === socket.id);
+        const playerIndex = room.lîstikvan.findIndex(
+          (p) => p.socketId === socket.id,
+        );
         if (playerIndex !== -1) {
           const player = room.lîstikvan[playerIndex];
           room.lîstikvan.splice(playerIndex, 1);
@@ -370,7 +408,7 @@ export function setupSocketIO(httpServer: HttpServer) {
             io.to(roomCode).emit("playerDisconnected", {
               playerId: player.id,
               playerName: player.name,
-              players: room.lîstikvan.map(p => ({
+              players: room.lîstikvan.map((p) => ({
                 id: p.id,
                 name: p.name,
                 isReady: p.isReady,

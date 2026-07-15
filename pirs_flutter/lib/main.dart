@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/services/auth_service.dart';
 import 'core/providers/app_providers.dart';
 import 'features/auth/presentation/login_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'features/home/presentation/home_screen.dart';
 
 void main() {
@@ -60,10 +63,7 @@ class _PirsAppState extends ConsumerState<PirsApp> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      appBarTheme: base.appBarTheme.copyWith(
-        centerTitle: true,
-        elevation: 0,
-      ),
+      appBarTheme: base.appBarTheme.copyWith(centerTitle: true, elevation: 0),
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -85,10 +85,7 @@ class _PirsAppState extends ConsumerState<PirsApp> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      appBarTheme: base.appBarTheme.copyWith(
-        centerTitle: true,
-        elevation: 0,
-      ),
+      appBarTheme: base.appBarTheme.copyWith(centerTitle: true, elevation: 0),
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -103,22 +100,22 @@ class _PirsAppState extends ConsumerState<PirsApp> {
         theme: _buildLightTheme(),
         darkTheme: _buildDarkTheme(),
         debugShowCheckedModeBanner: false,
-        home: const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
+        home: const Scaffold(body: Center(child: CircularProgressIndicator())),
       );
     }
 
     final user = ref.watch(currentUserProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp(
       title: 'Pirs Kurmancî',
       theme: _buildLightTheme(),
       darkTheme: _buildDarkTheme(),
       themeMode: themeMode,
+      locale: Locale(locale),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       home: user.isGuest ? const LoginScreen() : const HomeScreen(),
     );

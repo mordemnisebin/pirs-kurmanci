@@ -19,8 +19,10 @@ class MultiplayerLobbyScreen extends ConsumerStatefulWidget {
 
 class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen> {
   final _roomCodeController = TextEditingController();
+  bool _isRoomCodeVisible = true;
   List<CategoryModel> _categories = [];
   String? _selectedCategoryId;
+  String _selectedGameMode = 'ffa';
   bool _isLoading = false;
   String? _errorMessage;
   StreamSubscription? _subscription;
@@ -114,6 +116,7 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
       userId: user.id,
       name: user.nickname,
       categoryId: _selectedCategoryId,
+      gameMode: _selectedGameMode,
     );
   }
 
@@ -162,8 +165,8 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withOpacity(0.1),
-              colorScheme.secondary.withOpacity(0.1),
+              colorScheme.primary.withValues(alpha: 0.1,
+              colorScheme.secondary.withValues(alpha: 0.1,
             ],
           ),
         ),
@@ -191,7 +194,7 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.purple.withOpacity(0.3),
+                              color: Colors.purple.withValues(alpha: 0.3,
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -216,7 +219,7 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                             Text(
                               'Odayek biafirîne an jî odayek beşdar bibe',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9,
                               ),
                             ),
                           ],
@@ -230,9 +233,9 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
+                            color: Colors.red.withValues(alpha: 0.1,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.red.withOpacity(0.3)),
+                            border: Border.all(color: Colors.red.withValues(alpha: 0.3),
                           ),
                           child: Row(
                             children: [
@@ -255,9 +258,54 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                         title: '🏠 Odayek Biafirîne',
                         child: Column(
                           children: [
+                            // Oyun Modu Seçimi
+                            DropdownButtonFormField<String>(
+                              value: _selectedGameMode,
+                              decoration: InputDecoration(
+                                labelText: 'Lîstik Mode',
+                                prefixIcon: const Icon(Icons.gamepad),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                filled: true,
+                              ),
+                              items: const [
+                                DropdownMenuItem(value: 'ffa', child: Text('Her kes ji bo xwe (FFA)')),
+                                DropdownMenuItem(value: '1vs1', child: Text('1 li hember 1 (1vs1)')),
+                                DropdownMenuItem(value: 'team', child: Text('Tîm (A vs B)')),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedGameMode = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16),
                             // Kategori seçimi
                             DropdownButtonFormField<String>(
-                              value: _selectedCategoryId,
+                              value: _selectedGameMode,
+                              decoration: InputDecoration(
+                                labelText: 'Lîstik Mode',
+                                prefixIcon: const Icon(Icons.gamepad),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                filled: true,
+                              ),
+                              items: const [
+                                DropdownMenuItem(value: 'ffa', child: Text('Her kes ji bo xwe (FFA)')),
+                                DropdownMenuItem(value: '1vs1', child: Text('1 li hember 1 (1vs1)')),
+                                DropdownMenuItem(value: 'team', child: Text('Tîm (A vs B)')),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedGameMode = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            DropdownButtonFormField<String>(
+                              initialValue: _selectedCategoryId,
                               decoration: InputDecoration(
                                 labelText: 'Kategorî (Bijarte)',
                                 prefixIcon: const Icon(Icons.category),
@@ -316,6 +364,7 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                           children: [
                             TextField(
                               controller: _roomCodeController,
+                              obscureText: !_isRoomCodeVisible,
                               textCapitalization: TextCapitalization.characters,
                               maxLength: 6,
                               inputFormatters: [
@@ -326,6 +375,16 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
                                 labelText: 'Koda Odayê',
                                 hintText: 'Mînak: ABC123',
                                 prefixIcon: const Icon(Icons.vpn_key),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isRoomCodeVisible ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isRoomCodeVisible = !_isRoomCodeVisible;
+                                    });
+                                  },
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -415,7 +474,7 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -675,7 +734,7 @@ class _MultiplayerWaitingRoomState extends ConsumerState<MultiplayerWaitingRoom>
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -718,7 +777,7 @@ class _MultiplayerWaitingRoomState extends ConsumerState<MultiplayerWaitingRoom>
                             const SizedBox(height: 8),
                             Text(
                               'Vê kodê bi hevalên xwe re parve bike',
-                              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                              style: TextStyle(color: Colors.white.withValues(alpha: 0.7),
                             ),
                           ],
                         ),
@@ -752,7 +811,7 @@ class _MultiplayerWaitingRoomState extends ConsumerState<MultiplayerWaitingRoom>
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.purple.withOpacity(0.1),
+                                color: Colors.purple.withValues(alpha: 0.1,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -794,11 +853,11 @@ class _MultiplayerWaitingRoomState extends ConsumerState<MultiplayerWaitingRoom>
                                       padding: const EdgeInsets.all(16),
                                       decoration: BoxDecoration(
                                         color: isCurrentUser
-                                            ? Colors.purple.withOpacity(0.1)
-                                            : Colors.grey.withOpacity(0.05),
+                                            ? Colors.purple.withValues(alpha: 0.1
+                                            : Colors.grey.withValues(alpha: 0.05,
                                         borderRadius: BorderRadius.circular(16),
                                         border: isCurrentUser
-                                            ? Border.all(color: Colors.purple.withOpacity(0.3))
+                                            ? Border.all(color: Colors.purple.withValues(alpha: 0.3)
                                             : null,
                                       ),
                                       child: Row(
@@ -860,8 +919,8 @@ class _MultiplayerWaitingRoomState extends ConsumerState<MultiplayerWaitingRoom>
                                             ),
                                             decoration: BoxDecoration(
                                               color: player['isReady'] == true
-                                                  ? Colors.green.withOpacity(0.1)
-                                                  : Colors.orange.withOpacity(0.1),
+                                                  ? Colors.green.withValues(alpha: 0.1
+                                                  : Colors.orange.withValues(alpha: 0.1,
                                               borderRadius: BorderRadius.circular(20),
                                             ),
                                             child: Text(

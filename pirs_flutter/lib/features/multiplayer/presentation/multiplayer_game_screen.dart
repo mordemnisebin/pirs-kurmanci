@@ -179,16 +179,16 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
   Color _getOptionColor(String option) {
     if (!_answered) {
       return _selectedAnswer == option
-          ? Colors.blue.withOpacity(0.2)
+          ? Colors.blue.withValues(alpha: 0.2
           : Colors.transparent;
     }
     
     if (option == _correctAnswer) {
-      return Colors.green.withOpacity(0.3);
+      return Colors.green.withValues(alpha: 0.3;
     }
     
     if (option == _selectedAnswer && _selectedAnswer != _correctAnswer) {
-      return Colors.red.withOpacity(0.3);
+      return Colors.red.withValues(alpha: 0.3;
     }
     
     return Colors.transparent;
@@ -224,7 +224,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -241,8 +241,8 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: _timeLeft <= 5
-                            ? Colors.red.withOpacity(0.3)
-                            : Colors.white.withOpacity(0.2),
+                            ? Colors.red.withValues(alpha: 0.3
+                            : Colors.white.withValues(alpha: 0.2,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -265,7 +265,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
                     value: _timeLeft / _timeLimit,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2,
                     valueColor: AlwaysStoppedAnimation(
                       _timeLeft <= 5 ? Colors.red : Colors.green,
                     ),
@@ -291,7 +291,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2,
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -308,7 +308,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                                 decoration: BoxDecoration(
                                   color: _getDifficultyColor(
                                     _currentQuestion!['difficulty'],
-                                  ).withOpacity(0.1),
+                                  ).withValues(alpha: 0.1,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
@@ -416,9 +416,9 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                             margin: const EdgeInsets.only(top: 8),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.1),
+                              color: Colors.blue.withValues(alpha: 0.1,
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                              border: Border.all(color: Colors.blue.withValues(alpha: 0.3),
                             ),
                             child: Row(
                               children: [
@@ -443,7 +443,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Column(
@@ -473,7 +473,7 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                             decoration: BoxDecoration(
                               color: isCurrentUser
                                   ? Colors.amber
-                                  : Colors.white.withOpacity(0.2),
+                                  : Colors.white.withValues(alpha: 0.2,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Row(
@@ -572,8 +572,8 @@ class _MultiplayerGameScreenState extends ConsumerState<MultiplayerGameScreen>
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: isCurrentUser
-                                    ? Colors.amber.withOpacity(0.2)
-                                    : Colors.grey.withOpacity(0.1),
+                                    ? Colors.amber.withValues(alpha: 0.2
+                                    : Colors.grey.withValues(alpha: 0.1,
                                 borderRadius: BorderRadius.circular(16),
                                 border: isCurrentUser
                                     ? Border.all(color: Colors.amber, width: 2)
