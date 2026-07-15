@@ -94,7 +94,7 @@ class HomeScreen extends ConsumerWidget {
                         height: 200,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.1,
+                          color: Colors.white.withOpacity(0.1),
                         ),
                       ),
                     ),
@@ -106,7 +106,7 @@ class HomeScreen extends ConsumerWidget {
                         height: 150,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.1,
+                          color: Colors.white.withOpacity(0.1),
                         ),
                       ),
                     ),
@@ -299,8 +299,8 @@ class HomeScreen extends ConsumerWidget {
                     data: (categories) => GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
                         childAspectRatio: 1.3,
@@ -359,7 +359,7 @@ class HomeScreen extends ConsumerWidget {
                       color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: colorScheme.outline.withValues(alpha: 0.2,
+                        color: colorScheme.outline.withOpacity(0.2),
                       ),
                     ),
                     child: Row(
@@ -423,7 +423,7 @@ class HomeScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: gradient[0].withValues(alpha: 0.3,
+                color: gradient[0].withOpacity(0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -434,7 +434,7 @@ class HomeScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2,
+                  color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: Colors.white, size: 32),
@@ -456,7 +456,7 @@ class HomeScreen extends ConsumerWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9,
+                        color: Colors.white.withOpacity(0.9),
                         fontSize: 13,
                       ),
                     ),
@@ -465,7 +465,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: Colors.white.withValues(alpha: 0.7,
+                color: Colors.white.withOpacity(0.7),
               ),
             ],
           ),
@@ -499,18 +499,18 @@ class HomeScreen extends ConsumerWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color.withValues(alpha: 0.15,
-                color.withValues(alpha: 0.05,
+                color.withOpacity(0.15),
+                color.withOpacity(0.05),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: color.withValues(alpha: 0.3,
+              color: color.withOpacity(0.3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: 0.1,
+                color: color.withOpacity(0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -522,7 +522,7 @@ class HomeScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2,
+                  color: color.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(emoji, style: const TextStyle(fontSize: 32)),
@@ -533,7 +533,7 @@ class HomeScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: color.withValues(alpha: 0.9,
+                  color: color.withOpacity(0.9),
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,

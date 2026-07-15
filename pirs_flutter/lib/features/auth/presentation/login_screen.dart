@@ -77,9 +77,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } catch (e) {
       final message = 'Çewtiyek çêbû: ${e.toString()}';
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
       setState(() {
         _errorMessage = message;
         _isLoading = false;
@@ -92,9 +92,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (asGuest) {
       final notifier = ref.read(currentUserProvider.notifier);
       notifier.state = UserProfile.guest();
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
       return;
     }
 
@@ -133,9 +133,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } catch (e) {
       final message = 'Çewtiyek çêbû: ${e.toString()}';
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
       setState(() {
         _errorMessage = message;
         _isLoading = false;
@@ -146,7 +146,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pirsên Kurmancî')),
+      appBar: AppBar(
+        title: const Text('Pirsên Kurmancî'),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
@@ -240,27 +242,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: ElevatedButton.icon(
                           onPressed: _isLoading
                               ? null
-                              : () => _isRegistering
-                                    ? _handleRegister()
-                                    : _handleLogin(),
+                              : () => _isRegistering ? _handleRegister() : _handleLogin(),
                           icon: _isLoading
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
+                                  child: CircularProgressIndicator(strokeWidth: 2),
                                 )
-                              : Icon(
-                                  _isRegistering
-                                      ? Icons.person_add
-                                      : Icons.lock_open,
-                                ),
+                              : Icon(_isRegistering ? Icons.person_add : Icons.lock_open),
                           label: Text(
                             _isLoading
-                                ? (_isRegistering
-                                      ? 'Tê qeyd dike...'
-                                      : 'Têdikeve...')
+                                ? (_isRegistering ? 'Tê qeyd dike...' : 'Têdikeve...')
                                 : (_isRegistering ? 'Qeyd bike' : 'Têkeve'),
                           ),
                         ),
@@ -292,9 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       const SizedBox(height: 8),
                       TextButton(
-                        onPressed: _isLoading
-                            ? null
-                            : () => _handleLogin(asGuest: true),
+                        onPressed: _isLoading ? null : () => _handleLogin(asGuest: true),
                         child: const Text('Wek mêvan bidomîne'),
                       ),
                     ],

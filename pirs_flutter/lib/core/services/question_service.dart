@@ -12,7 +12,7 @@ class QuestionService {
     try {
       final queryParams = <String, String>{
         'limit': limit.toString(),
-        'categoryId': ?categoryId,
+        if (categoryId != null) 'categoryId': categoryId,
       };
 
       final response = await ApiClient.get(

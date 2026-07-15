@@ -28,8 +28,8 @@ Start Command: npm run start
 #### Adım 4: Environment Variables
 "Environment" sekmesinde ekle:
 ```
-DATABASE_URL = postgresql://kullanici_adi:sifre@sunucu-adresi.aws.neon.tech/neondb?sslmode=require
-JWT_SECRET = BURAYA_GUCLU_BIR_SIR_YAZILMALI
+DATABASE_URL = postgresql://neondb_owner:npg_0JQzfbI3rwZE@ep-odd-wave-agtq7b01-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
+JWT_SECRET = PirsKurmanci2025!SecretKeyForJWT@Production
 NODE_ENV = production
 PORT = 10000
 ```

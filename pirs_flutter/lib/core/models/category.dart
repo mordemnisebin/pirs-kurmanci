@@ -26,8 +26,7 @@ class CategoryModel {
       description: json['description'] as String?,
       icon: json['icon'] as String?,
       color: json['color'] as String?,
-      questionCount:
-          (json['_count']?['questions'] ?? json['questionCount'] ?? 0) as int,
+      questionCount: (json['_count']?['questions'] ?? json['questionCount'] ?? 0) as int,
     );
   }
 

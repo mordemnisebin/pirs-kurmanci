@@ -5,8 +5,7 @@ import 'api_config.dart';
 /// Multiplayer lîstik karûbar.
 class MultiplayerService {
   static io.Socket? _socket;
-  static final _eventController =
-      StreamController<Map<String, dynamic>>.broadcast();
+  static final _eventController = StreamController<Map<String, dynamic>>.broadcast();
 
   /// Event akışı
   static Stream<Map<String, dynamic>> get events => _eventController.stream;
@@ -22,9 +21,6 @@ class MultiplayerService {
       ApiConfig.baseUrl,
       io.OptionBuilder()
           .setTransports(['websocket'])
-          .enableReconnection() // Otomatik yeniden bağlanma
-          .setReconnectionAttempts(5) // 5 kez dene
-          .setReconnectionDelay(2000) // 2 sn bekle
           .disableAutoConnect()
           .build(),
     );
@@ -106,7 +102,6 @@ class MultiplayerService {
     String? categoryId,
     String? difficulty,
     int maxPlayers = 4,
-    String gameMode = 'ffa',
   }) {
     _socket?.emit('createRoom', {
       'userId': userId,
@@ -114,7 +109,6 @@ class MultiplayerService {
       'categoryId': categoryId,
       'difficulty': difficulty,
       'maxPlayers': maxPlayers,
-      'gameMode': gameMode,
     });
   }
 
@@ -132,13 +126,25 @@ class MultiplayerService {
   }
 
   /// Hazır ol
-  static void setReady({required String roomCode, required String userId}) {
-    _socket?.emit('setReady', {'roomCode': roomCode, 'userId': userId});
+  static void setReady({
+    required String roomCode,
+    required String userId,
+  }) {
+    _socket?.emit('setReady', {
+      'roomCode': roomCode,
+      'userId': userId,
+    });
   }
 
   /// Oyunu başlat (sadece oda sahibi)
-  static void startGame({required String roomCode, required String userId}) {
-    _socket?.emit('startGame', {'roomCode': roomCode, 'userId': userId});
+  static void startGame({
+    required String roomCode,
+    required String userId,
+  }) {
+    _socket?.emit('startGame', {
+      'roomCode': roomCode,
+      'userId': userId,
+    });
   }
 
   /// Cevap gönder
@@ -162,7 +168,13 @@ class MultiplayerService {
   }
 
   /// Odadan ayrıl
-  static void leaveRoom({required String roomCode, required String userId}) {
-    _socket?.emit('leaveRoom', {'roomCode': roomCode, 'userId': userId});
+  static void leaveRoom({
+    required String roomCode,
+    required String userId,
+  }) {
+    _socket?.emit('leaveRoom', {
+      'roomCode': roomCode,
+      'userId': userId,
+    });
   }
 }

@@ -12,9 +12,8 @@ class ApiClient {
     Map<String, String>? queryParams,
   }) async {
     final token = await StorageService.getToken();
-    final uri = Uri.parse(
-      '${ApiConfig.baseUrl}$endpoint',
-    ).replace(queryParameters: queryParams);
+    final uri = Uri.parse('${ApiConfig.baseUrl}$endpoint')
+        .replace(queryParameters: queryParams);
 
     final response = await http.get(
       uri,

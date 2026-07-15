@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export function requestLogger(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void {
+export function requestLogger(req: Request, res: Response, next: NextFunction): void {
   const start = Date.now();
   const { method, url } = req;
 

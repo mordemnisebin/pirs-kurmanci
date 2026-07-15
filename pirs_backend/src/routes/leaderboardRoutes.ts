@@ -30,7 +30,7 @@ router.get("/", async (req: Request, res: Response) => {
     orderBy: { score: "desc" },
   });
 
-  const uniqueByUser = new Map<string, (typeof sessions)[number]>();
+  const uniqueByUser = new Map<string, typeof sessions[number]>();
   for (const session of sessions) {
     if (!uniqueByUser.has(session.userId)) {
       uniqueByUser.set(session.userId, session);

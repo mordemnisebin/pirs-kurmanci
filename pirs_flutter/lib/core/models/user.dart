@@ -15,11 +15,11 @@ class UserProfile {
   final bool isGuest;
 
   factory UserProfile.guest() => const UserProfile(
-    id: 'guest',
-    nickname: 'Mêvan',
-    email: 'guest@pirs.app',
-    isGuest: true,
-  );
+        id: 'guest',
+        nickname: 'Mêvan',
+        email: 'guest@pirs.app',
+        isGuest: true,
+      );
 
   UserProfile copyWith({
     String? id,
@@ -38,12 +38,12 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'nickname': nickname,
-    'email': email,
-    'avatarUrl': avatarUrl,
-    'isGuest': isGuest,
-  };
+        'id': id,
+        'nickname': nickname,
+        'email': email,
+        'avatarUrl': avatarUrl,
+        'isGuest': isGuest,
+      };
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
@@ -54,4 +54,5 @@ class UserProfile {
       isGuest: json['isGuest'] as bool? ?? false,
     );
   }
+
 }

@@ -9,9 +9,9 @@ router.get("/", async (_req: Request, res: Response) => {
     orderBy: { name: "asc" },
     include: {
       _count: {
-        select: { questions: true },
-      },
-    },
+        select: { questions: true }
+      }
+    }
   });
   res.json(categories);
 });
